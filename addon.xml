@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<AddOn xmlns="http://umlfri.org/xmlschema/addon.xsd">
+    <Identity uri="urn:umlfri.org:plugin:criticalPath" />
+    
+    <FriendlyName name="Critical path finder" version="0.1" />
+    <Author>
+        <Name name="Tomas Baca" />
+        <Homepage url="http://umlfri.org" />
+        
+        <CommonLicense name="GPL-2" />
+    </Author>
+    
+    <Icon path="icon.png" />
+    <Description>
+        This plugin can be used to find critical path in network.
+    </Description>
+    
+    <Plugin>
+        <Code os="all" language="python" path="plugin" />
+        
+        <Metamodel required="urn:umlfri.org:metamodel:graphTheory" />
+    </Plugin>
+</AddOn>
