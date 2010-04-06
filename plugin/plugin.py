@@ -15,28 +15,28 @@ class CCriticalPathFinder(object):
         
         self.interface = interface
         self.interface.StartAutocommit()
-        try:
-            self.interface.AddMenu('MenuItem', 'mnuMenubar', 'graphtools', None, text = 'Graph Tools')
-            self.interface.AddMenu('submenu', 'mnuMenubar/graphtools', None, None)
-        except PluginInvalidParameter:
-            pass
-        self.interface.AddMenu('MenuItem', 'mnuMenubar/graphtools', ''.join(chr(random.randint(97,125))for i in xrange(6)), self.activity, text = 'Find critical path')
+        self.adapter = interface.GetAdapter()
+        self.guimanager = self.adapter.GetGuiManager()
+        mainmenu = self.guimanager.GetMainMenu()
+        mnuTools = mainmenu.AddMenuItem('mItemGraphTools', None, -1, 'Graph Tools')
+        mnuTools = mnuTools.AddSubmenu()
+        mnuTools.AddMenuItem('mItemCriticalPath', self.activity, 0, 'Find critical Path')
     
     def activity(self, path):
         try:
             project = self.interface.GetAdapter().GetProject()
             if project is None:
-                self.interface.DisplayWarning("No project loaded")
+                self.guimanager.DisplayWarning("No project loaded")
                 return
             
             metamodel = project.GetMetamodel()
             if metamodel.GetUri() != 'urn:umlfri.org:metamodel:graphTheory':
-                self.interface.DisplayWarning('Not supported metamodel')
+                self.guimanager.DisplayWarning('Not supported metamodel')
                 return
             
             diagram = self.interface.GetAdapter().GetCurrentDiagram()
             if diagram is None or diagram.GetType() != 'Critical Path diagram':
-                self.interface.DisplayWarning('Critical path not supported on current diagram')
+                self.guimanager.DisplayWarning('Critical path not supported on current diagram')
                 return
             
             conditionlist = {}
@@ -84,7 +84,7 @@ class CCriticalPathFinder(object):
                 a.ref.GetObject().SetValue('index', str(a.idx))
                 
             if idx < len(activities):
-                self.interface.DisplayWarning('Cycle in graph')
+                self.guimanager.DisplayWarning('Cycle in graph')
                 return
             
             #hladanie casov
@@ -120,11 +120,11 @@ class CCriticalPathFinder(object):
             self.s = sort
             
         except PluginProjectNotLoaded:
-            self.interface.DisplayWarning('Project is not loaded')
+            self.guimanager.DisplayWarning('Project is not loaded')
         except (KeyError, ), e:
-            self.interface.DisplayWarning('Unknown condition called "%s"'%e.args)
-        #~ except:
-            #~ self.interface.DisplayWarning('Unkown error in plugin')
+            self.guimanager.DisplayWarning('Unknown condition called "%s"'%e.args)
+        except:
+            self.guimanager.DisplayWarning('Unkown error in plugin')
 
 # selecting plugin main object
 pluginMain = CCriticalPathFinder
