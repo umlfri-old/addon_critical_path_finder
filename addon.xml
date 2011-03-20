@@ -15,9 +15,11 @@
         This plugin can be used to find critical path in network.
     </Description>
     
+    <Dependencies>
+        <AddOn uri="urn:umlfri.org:metamodel:graphTheory" required="true" />
+    </Dependencies>
+    
     <Plugin>
         <Code os="all" language="python" path="plugin" />
-        
-        <Metamodel required="urn:umlfri.org:metamodel:graphTheory" />
     </Plugin>
 </AddOn>
